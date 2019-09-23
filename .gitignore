@@ -135,4 +135,4 @@ typings/
 
 config
 module
-credentials
+credentials.csv
