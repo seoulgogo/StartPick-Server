@@ -25,6 +25,7 @@ router.post('/', async(req,res)=>{
             }else{
                 let salt = selectUserResult[0].salt;
                 let resultPw = selectUserResult[0].pw;
+                
 
                 let hasedPw = await crypto.pbkdf2(pw, salt, 100,32, 'SHA512');
                 let basedPw = hasedPw.toString('base64');

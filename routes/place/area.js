@@ -10,7 +10,24 @@ var seoulCity=["강남구","강동구", "강북구","강서구","관악구","광
 
 router.get('/:city',async(req,res)=>{
     let {city} = req.params;
-    console.log(seoulCity[city]);
-    //DB에서 꺼내와서 보내기
+    console.log(city);
+    try{
+        let selectCityMapQuery = "SELECT * from mydb.map where city=?";
+        let selectCityMapResult;
+        var connection = await pool.getConnection();
+        await connection.commit();
+        
+        selectCityMapResult = await connection.query(selectCityMapQuery,[city])||null;
+        if(!selectCityMapResult){
+            res.status(200).send(util.successFalse(statusCode.BAD_REQUEST,resMessage.MAP_DATA_NO));
+        }else{
+            res.status(200).send(util.successTrue(statusCode.OK, resMessage.DATA_SUCESS,selectCityMapResult))
+        }
+    }catch(err){
+        connection.rollback(()=>{});
+            console.log(err);
+            next(err);
+    }
 });
+
 module.exports = router;
