@@ -13,6 +13,8 @@ router.use('/place',require('./place/index'));
 router.get('/', function(req, res, next) {
   console.log("hihihi");
   res.render('index', { title: 'Express' });
+
+  
 });
 
 module.exports = router;
