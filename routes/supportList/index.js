@@ -16,7 +16,6 @@ router.post('/insertLike',async(req,res)=>{
     console.log(business_idx);
 
     if(!user_idx || !business_idx){
-
         res.status(200).send(util.successFalse(statusCode.BAD_REQUEST,resMessage.EMPTY_LIST));
     }else{
         let insertListQuery = 'INSERT into businessLike(user_idx, business_idx) VALUES(?,?)';

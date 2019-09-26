@@ -6,7 +6,7 @@ const resMessage = require('../../module/responseMessage');
 const util = require('../../module/utils');
 
 
-// /supportList/endorder
+// supportList/endorder
 // 마감 날짜 순
 router.get('/endOrder',async(req,res)=>{
     let getEndOrder;
@@ -28,7 +28,7 @@ router.get('/endOrder',async(req,res)=>{
     }
 });
 
-// /supportList/endorder
+// supportList/enrollOrder
 // 등록일순
 router.get('/enrollOrder',async(req,res)=>{
     let getEnrollOrder;
@@ -49,7 +49,7 @@ router.get('/enrollOrder',async(req,res)=>{
     }
 });
 
-// /supportList/startorder
+// supportList/startorder
 // 신청날짜순
 router.get('/startOrder',async(req,res)=>{
     let getStartOrder;
