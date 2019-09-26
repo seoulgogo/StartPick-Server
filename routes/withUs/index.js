@@ -8,6 +8,7 @@ const upload = require('../../config/multer');
 
 router.use('/all',require('./all'));
 router.use('/like',require('./like'));
+router.use('/order',require('./order'));
 
 // 공고글 작성
 // withUs/insertWithUs
@@ -29,7 +30,7 @@ router.post('/insertWithUs', upload.single('img'), async(req,res)=>{
     let managerPhone = req.body.managerPhone;
     let managerEmail = req.body.managerEmail;
 
-    let insertWithUsQuery = 'INSERT INTO withUs(user_idx, startUp_idx, job_idx, detailJob, companyName, thumnail) VALUES(?,?,?,?,?,?);' + 'INSERT INTO withUsDetail(city_idx, recrutNum, salary, nego, mainTask, intro, managerName, managerPhone, managerEmail) VALUES(?,?,?,?,?,?,?,?,?);';
+    let insertWithUsQuery = 'INSERT INTO withUs(user_idx, startUp_idx, job_idx, detailJob, companyName, thumnail, date) VALUES(?,?,?,?,?,?, curdate());' + 'INSERT INTO withUsDetail(city_idx, recrutNum, salary, nego, mainTask, intro, managerName, managerPhone, managerEmail) VALUES(?,?,?,?,?,?,?,?,?);';
     let insertWithUsResult;
     try{
         var connection = await pool.getConnection();
@@ -49,10 +50,11 @@ router.post('/insertWithUs', upload.single('img'), async(req,res)=>{
 
 // 공고글 수정
 // withUs/modiyfyWithUs
-router.post('/modiyfyWithUs',async(req,res)=>{
+upload.storage.temp="withUs/";
+router.post('/modiyfyWithUs',upload.single('img'), async(req,res)=>{
     console.log(req.body);
+    let withUs_idx = req.body.withUs_idx || ;
     let user_idx = req.body.user_idx;
-    let startUp_idx = req.body.startUp_idx;
     let job_idx = req.body.job_idx;
     let detailJob = req.body.detailJob;
     let recrutNum = req.body.recrutNum;
@@ -67,12 +69,11 @@ router.post('/modiyfyWithUs',async(req,res)=>{
     let managerPhone = req.body.managerPhone;
     let managerEmail = req.body.managerEmail;
 
-    let updateQuery  ='UPDATE summer.todolist SET title=?, content=?, prior=?,complete=?,dueDate=? WHERE idx=?';
+    let updateQuery  = 'UPDATE withUs SET job_idx=?, detailJob=?, companyName=?, thumnail=? WHERE withUs_idx = ? AND user_idx = ?;' + 'UPDATE withUsDetail SET city_idx=?, recrutNum=?, salary=?, nego=?, mainTask=?, intro=?, managerName=?, managerPhone=?, managerEmail=? WHERE withUs_idx = ?;';
     let updateResult;
-
         try{
             var connetion = await pool.getConnection();
-            updateResult = await connetion.query(updateQuery,[title,content,prior,compelete,dueDate,idx]);
+            updateResult = await connetion.query(updateQuery, [job_idx, detailJob,companyName,img, withUs_idx, user_idx, city_idx, recrutNum, salary, nego, mainTask, intro, managerName, managerPhone, managerEmail, withUs_idx]);
             console.log(updateResult);
         }catch(err){
             console.log(err);
