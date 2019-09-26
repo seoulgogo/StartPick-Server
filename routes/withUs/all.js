@@ -25,7 +25,7 @@ router.get('/',async(req,res)=>{
     }
 });
 
-// 스타트업분야, 직무 분류별로 보여주기
+// 스타트업분야, 직무 분류별로 보여주기!!
 // withUs/all/filterWithUsAll
 router.get('/filterWithUs',async(req,res)=>{
     let getfilterWithUsAll;
