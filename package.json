@@ -19,5 +19,8 @@
     "multer-s3": "^2.9.0",
     "promise-mysql": "^3.3.2",
     "utf8": "^3.0.0"
+  },
+  "devDependencies": {
+    "clean-css": "^4.2.1"
   }
 }
