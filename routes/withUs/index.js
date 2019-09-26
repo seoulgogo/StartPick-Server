@@ -8,6 +8,7 @@ const upload = require('../../config/multer');
 
 router.use('/all',require('./all'));
 router.use('/like',require('./like'));
+router.use('/apply',require('./apply'));
 router.use('/order',require('./order'));
 
 // 공고글 작성
@@ -30,12 +31,12 @@ router.post('/insertWithUs', upload.single('img'), async(req,res)=>{
     let managerPhone = req.body.managerPhone;
     let managerEmail = req.body.managerEmail;
 
-    let insertWithUsQuery = 'INSERT INTO withUs(user_idx, startUp_idx, job_idx, detailJob, companyName, thumnail, date) VALUES(?,?,?,?,?,?, curdate());' + 'INSERT INTO withUsDetail(city_idx, recrutNum, salary, nego, mainTask, intro, managerName, managerPhone, managerEmail) VALUES(?,?,?,?,?,?,?,?,?);';
+    let insertWithUsQuery = 'INSERT INTO withUs(user_idx, startUp_idx, job_idx, detailJob, companyName, thumnail) VALUES(?,?,?,?,?,?);' + 'INSERT INTO withUsDetail(city_idx, recrutNum, salary, nego, mainTask, intro, managerName, managerPhone, managerEmail) VALUES(?,?,?,?,?,?,?,?,?);';
     let insertWithUsResult;
     try{
         var connection = await pool.getConnection();
         await connection.commit();
-        insertWithUsResult = await connection.query(insertWithUsQuery,[user_idx, startUp_idx, job_idx, companyName, img,city_idx, detailJob, recrutNum, salary, nego, mainTask, intro, managerName, managerPhone, managerEmail]);
+        insertWithUsResult = await connection.query(insertWithUsQuery,[user_idx, startUp_idx, job_idx, detailJob, companyName, img, city_idx, recrutNum, salary, nego, mainTask, intro, managerName, managerPhone, managerEmail]);
 
     }catch(err){
         console.log(err);
@@ -53,7 +54,7 @@ router.post('/insertWithUs', upload.single('img'), async(req,res)=>{
 upload.storage.temp="withUs/";
 router.post('/modiyfyWithUs',upload.single('img'), async(req,res)=>{
     console.log(req.body);
-    let withUs_idx = req.body.withUs_idx || ;
+    let withUs_idx = req.body.withUs_idx;
     let user_idx = req.body.user_idx;
     let job_idx = req.body.job_idx;
     let detailJob = req.body.detailJob;

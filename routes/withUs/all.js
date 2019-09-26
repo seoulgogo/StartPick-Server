@@ -26,6 +26,33 @@ router.get('/',async(req,res)=>{
 });
 
 // 스타트업분야, 직무 분류별로 보여주기!!
+// withUs/all/getStartUpIdx
+router.get('/getStartUpIdx',async(req,res)=>{
+    let getStartUpResult;
+    let startUp_idx = req.body.startUp_idx;
+    console.log(startUp_idx);
+
+    try{
+        var connection = await pool.getConnection();
+        let getStartUpQuery = 'SELECT s.fieldName FROM withUs w,startUp s WHERE w.startUp_idx = s.startUp_idx AND w.startUp_idx = ?';
+        getStartUpResult = await connection.query(getStartUpQuery,[startUp_idx]);
+        console.log(getStartUpResult);
+    }catch(err){
+        console.log(err);
+        connection.rollback(()=>{});
+        res.status(200).send(util.successFalse(statusCode.DB_ERROR,resMessage.ALL_LSIT_FAIL));
+        next(err);
+    }finally{
+        pool.releaseConnection(connection);
+        res.status(200).send(util.successTrue(statusCode.OK,resMessage.ALL_LIST_SUCCESS,getStartUpResult));
+
+    }
+});
+
+
+
+
+// 스타트업분야, 직무 분류별로 보여주기!!
 // withUs/all/filterWithUsAll
 router.get('/filterWithUs',async(req,res)=>{
     let getfilterWithUsAll;
