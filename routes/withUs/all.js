@@ -76,15 +76,4 @@ router.get('/detailAll',async(req,res)=>{
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
 module.exports = router;
