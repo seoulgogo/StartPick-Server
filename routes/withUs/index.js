@@ -87,6 +87,30 @@ router.post('/modiyfyWithUs',upload.single('img'), async(req,res)=>{
         }
 });
 
+// withUs/withUsDelete
+// 함께해요 삭제
+router.post('/withUsDelete' ,async(req,res)=>{
+    let idx = req.body.withUs_idx;
+    console.log(idx);
+    if(idx<=0){
+        res.status(200).send(util.successFalse(statusCode.BAD_REQUEST,resMessage.EMPTY_LIST));
+    }else{
+        let deleteQuery = 'DELETE FROM withUs WHERE withUs_idx = ?';
+        let deleteResult;
+        try{
+            var connection = await pool.getConnection();
+            deleteResult = await connection.query(deleteQuery,[idx]);
+        }catch(err){
+            console.log(err);
+            connection.rollback(()=>{});
+            res.status(200).send(util.successFalse(statusCode.DB_ERROR,resMessage.LIST_DELETE_FAILE));
 
+        }finally{
+            pool.releaseConnection(connection);
+            res.status(200).send(util.successTrue(statusCode.OK,resMessage.LIST_DELETE_SUCCESS));
+        }
+
+    }
+})
 
 module.exports = router;

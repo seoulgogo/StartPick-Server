@@ -28,9 +28,9 @@ router.get('/',async(req,res)=>{
 
 // 장르별 지원사업
 // /supportList/all/typeAll
-router.get('/typeAll',async(req,res)=>{
+router.get('/typeAll/:bsCategory_idx',async(req,res)=>{
     let getTypeAllListResult;
-    let bsCategory_idx = req.body.bsCategory_idx;
+    let {bsCategory_idx} = req.params;
     console.log(bsCategory_idx);
     try{
         var connection = await pool.getConnection();
@@ -51,9 +51,9 @@ router.get('/typeAll',async(req,res)=>{
 });
 
 // /supportList/all/detailAll
-router.get('/detailAll',async(req,res)=>{
+router.get('/detailAll/:business_idx',async(req,res)=>{
     let getDetailAllQuery;
-    let business_idx = req.body.business_idx;
+    let {business_idx} = req.params;
     try{
         var connection = await pool.getConnection();
         let getDetailAllQuery = 'select * from business b, businessDetail bd where b.business_idx = bd.business_idx and b.business_idx = ?';

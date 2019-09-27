@@ -7,7 +7,7 @@ const util = require('../../module/utils');
 const upload = require('../../config/multer');
 
 // main/newOrder
-// 최신 공고
+// 최신 공고, 배너
 router.get('/newOrder',async(req,res)=>{
     let getStartOrder;
     try{
@@ -28,9 +28,9 @@ router.get('/newOrder',async(req,res)=>{
 });
 
 // 맞춤형 공고 - 관련직무 중 좋아요 순
-router.get('/CustomizeOrder', async(req,res)=>{
+router.get('/CustomizeOrder/:job_idx', async(req,res)=>{
     let getCustomizeOrder;
-    let job_idx = req.body.job_idx;
+    let {job_idx} = req.params;
     try{
         var connection = await pool.getConnection();
         let getCustomizeOrderQuery = 'SELECT * FROM withUs WHERE job_idx = ? ORDER BY likeNum DESC limit 5';
@@ -47,13 +47,34 @@ router.get('/CustomizeOrder', async(req,res)=>{
     }
 });
 
+
+// main/likeOrder
+// 좋아요순
+router.get('/likeOrder', async(req,res)=>{
+    let getLikeOrder;
+    try{
+        var connection = await pool.getConnection();
+        let getLikeOrderQuery = 'SELECT * FROM withUs ORDER BY likeNum DESC limit 3';
+        getLikeOrder = await connection.query(getLikeOrderQuery);
+        console.log(getLikeOrder);
+    }catch(err){
+        console.log(err);
+        connection.rollback(()=>{});
+        res.status(200).send(util.successFalse(statusCode.DB_ERROR,resMessage.ALL_LSIT_FAIL));
+        next(err);
+    }finally{
+        pool.releaseConnection(connection);
+        res.status(200).send(util.successTrue(statusCode.OK,resMessage.ALL_LIST_SUCCESS,getLikeOrder));
+    }
+});
+
 // withUs/newOrder
-// 등록일순 - 5개씩
+// 등록일순 - 3개씩
 router.get('/newOrder',async(req,res)=>{
     let getStartOrder;
     try{
         var connection = await pool.getConnection();
-        let getStartOrderQuery = 'SELECT * FROM withUs ORDER BY date DESC';
+        let getStartOrderQuery = 'SELECT * FROM withUs ORDER BY date DESC limit 3';
         getStartOrder = await connection.query(getStartOrderQuery);
         console.log(getStartOrder);
 

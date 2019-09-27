@@ -27,9 +27,9 @@ router.get('/',async(req,res)=>{
 
 // 스타트업분야, 직무 분류별로 보여주기!!
 // withUs/all/getStartUpIdx
-router.get('/getStartUpIdx',async(req,res)=>{
+router.get('/getStartUpIdx/:startUp_idx',async(req,res)=>{
     let getStartUpResult;
-    let startUp_idx = req.body.startUp_idx;
+    let {startUp_idx} = req.params;
     console.log(startUp_idx);
 
     try{
@@ -54,10 +54,10 @@ router.get('/getStartUpIdx',async(req,res)=>{
 
 // 스타트업분야, 직무 분류별로 보여주기!!
 // withUs/all/filterWithUsAll
-router.get('/filterWithUs',async(req,res)=>{
+router.get('/filterWithUs/:startUp_idx/:job_idx',async(req,res)=>{
     let getfilterWithUsAll;
-    let startUp_idx = req.body.startUp_idx;
-    let job_idx = req.body.job_idx;
+    let {startUp_idx} = req.params;
+    let {job_idx} = req.params;
     console.log(startUp_idx);
     console.log(job_idx);
     try{
@@ -80,10 +80,10 @@ router.get('/filterWithUs',async(req,res)=>{
 
 // 공고 정보
 // withUs/all/detailAll
-router.get('/detailAll',async(req,res)=>{
+router.get('/detailAll/:withUs_idx/:job_idx',async(req,res)=>{
     let getDetailAllResult;
-    let withUs_idx = req.body.withUs_idx;
-    let job_idx = req.body.job_idx;
+    let {withUs_idx} = req.params;
+    let {job_idx} = req.params;
     try{
         var connection = await pool.getConnection();
         let getDetailAllQuery = 'SELECT * FROM withUs w, withUsDetail wd WHERE w.withUs_idx = wd.withUs_idx AND w.withUs_idx = ?;' + 'SELECT j.dutyName FROM withUs w, job j WHERE w.job_idx = j.job_idx AND j.job_idx = ?;';
