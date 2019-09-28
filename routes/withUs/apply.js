@@ -10,17 +10,18 @@ const util = require('../../module/utils');
 router.post('/insertApply',async(req,res)=>{
     let user_idx = req.body.user_idx;
     let withUs_idx = req.body.withUs_idx;
-
+    let resume_idx = req.body.resume_idx;
     console.log(withUs_idx);
     console.log(user_idx);
+    console.log(resume_idx);
     if(!user_idx || !withUs_idx){
         res.status(200).send(util.successFalse(statusCode.BAD_REQUEST,resMessage.EMPTY_LIST));
     }else{
-        let insertApplyQuery = 'INSERT into withUsApply(user_idx, withUs_idx) VALUES(?,?)';
+        let insertApplyQuery = 'INSERT into withUsApply(user_idx, withUs_idx, resume_idx) VALUES(?,?,?)';
         let insertApplyResult;
         try{
             var connection = await pool.getConnection();
-            insertApplyResult = await connection.query(insertApplyQuery,[user_idx, withUs_idx]);
+            insertApplyResult = await connection.query(insertApplyQuery,[user_idx, withUs_idx, resume_idx]);
             console.log(insertApplyResult);
         }catch(err){
             console.log(err);

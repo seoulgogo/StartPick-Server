@@ -45,8 +45,8 @@ router.post('/plusWithUsLikeNum',async(req,res)=>{
       let updateQuery  ='UPDATE withUs SET likeNum = likeNum	+ 1 WHERE withUs_idx = ?';
       let updateResult;
         try{
-            var connetion = await pool.getConnection();
-            updateResult = await connetion.query(updateQuery,[withUs_idx]);
+            var connection = await pool.getConnection();
+            updateResult = await connection.query(updateQuery,[withUs_idx]);
             console.log(updateResult);
         }catch(err){
           console.log(err);
@@ -60,6 +60,31 @@ router.post('/plusWithUsLikeNum',async(req,res)=>{
       }
 });
 
+// withUs/like/minusWithUsLikeNum
+router.post('/minusWithUsLikeNum',async(req,res)=>{
+    console.log(req.body);
+    let withUs_idx  = req.body.withUs_idx;
+
+    if(!withUs_idx){
+        res.status(200).send(util.successFalse(statusCode.BAD_REQUEST,resMessage.EMPTY_LIST));
+    }else{
+      let updateQuery  ='UPDATE withUs SET likeNum = likeNum	- 1 WHERE withUs_idx = ?';
+      let updateResult;
+        try{
+            var connection = await pool.getConnection();
+            updateResult = await connection.query(updateQuery,[withUs_idx]);
+            console.log(updateResult);
+        }catch(err){
+          console.log(err);
+          connection.rollback(()=>{});
+          res.status(200).send(util.successFalse(statusCode.BAD_REQUEST,resMessage.LIST_FAIL));
+          next(err);
+        }finally{
+          pool.releaseConnection(connection);
+          res.status(200).send(util.successTrue(statusCode.OK,resMessage.LIST_SUCCESS))
+        }
+      }
+});
 
 
 

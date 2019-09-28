@@ -80,14 +80,13 @@ router.get('/filterWithUs/:startUp_idx/:job_idx',async(req,res)=>{
 
 // 공고 정보
 // withUs/all/detailAll
-router.get('/detailAll/:withUs_idx/:job_idx',async(req,res)=>{
+router.get('/detailAll/:withUs_idx',async(req,res)=>{
     let getDetailAllResult;
     let {withUs_idx} = req.params;
-    let {job_idx} = req.params;
     try{
         var connection = await pool.getConnection();
-        let getDetailAllQuery = 'SELECT * FROM withUs w, withUsDetail wd WHERE w.withUs_idx = wd.withUs_idx AND w.withUs_idx = ?;' + 'SELECT j.dutyName FROM withUs w, job j WHERE w.job_idx = j.job_idx AND j.job_idx = ?;';
-        getDetailAllResult = await connection.query(getDetailAllQuery,[withUs_idx, job_idx]);
+        let getDetailAllQuery = 'SELECT * FROM withUs w, withUsDetail wd WHERE w.withUs_idx = wd.withUs_idx AND w.withUs_idx = ?';
+        getDetailAllResult = await connection.query(getDetailAllQuery,[withUs_idx]);
         console.log(getDetailAllResult);
 
     }catch(err){

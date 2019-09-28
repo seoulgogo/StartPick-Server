@@ -95,7 +95,7 @@ router.post('/withUsDelete' ,async(req,res)=>{
     if(idx<=0){
         res.status(200).send(util.successFalse(statusCode.BAD_REQUEST,resMessage.EMPTY_LIST));
     }else{
-        let deleteQuery = 'DELETE FROM withUs WHERE withUs_idx = ?';
+        let deleteQuery = 'DELETE FROM withUs WHERE withUs_idx = ?;' + 'DELETE FROM withUsDetail WHERE withUs_idx = ?;';
         let deleteResult;
         try{
             var connection = await pool.getConnection();
