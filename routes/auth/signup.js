@@ -27,22 +27,26 @@ router.post('/', upload.single('img'), async(req,res)=>{
     if(!email || !req.body.pw || !name || !phone || ! birth || !img || !job || !gender){
         res.status(200).send(util.successFalse(statusCode.BAD_REQUEST,resMessage.NEED_MORE_PARAMS));
     }else{
-        let insertUserQuery = "INSERT INTO mydb.user (email, pw, salt, name, phone, birth, img, job_idx, gender) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        let insertUserQuery = "INSERT INTO mydb.user (email, pw, salt, name, phone, birth, img, job_idx, gender) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         let insertUserResult;
         try{
             var connection = await pool.getConnection();
             await connection.commit();
             insertUserResult = await connection.query(insertUserQuery,[email, basedPw, salt, name, phone, birth, img, job, gender])||null;
-
+            console.log(insertUserResult)
+            var data = {
+                user_idx : insertUserResult.insertId,
+            }
         }catch(err){
             connection.rollback(()=>{});
             console.log(err);
             next(err);
         }finally{
-            if(insertUserResult==null){
+            pool.releaseConnection(connection);
+		if(insertUserResult==null){
                 res.status(200).send(util.successFalse(statusCode.BAD_REQUEST,resMessage.SIGNUP_FAIL));
             }else{
-                res.status(200).send(util.successTrue(statusCode.OK,resMessage.SIGNUP_SUCESS));
+                res.status(200).send(util.successTrue(statusCode.OK,resMessage.SIGNUP_SUCESS,data));
             }
         }
 

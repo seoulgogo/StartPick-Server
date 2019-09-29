@@ -5,16 +5,11 @@ const statusCode = require('../../module/statusCode');
 const resMessage = require('../../module/responseMessage');
 const util = require('../../module/utils');
 
-router.use('/all',require('./all'));
-router.use('/area',require('./area'));
-router.use('/distOrder',require('./distOrder'));
-router.use('/theme',require('./theme'));
-
-router.use('/area',require('./area'));
-
+router.use('/userInfo',require('./userInfo'));
+router.use('/scrape',require('./scrape'));
 router.get('/', function(req, res, next) {
     res.render('index', { title: 'Express' });
 });
-  
+
 
 module.exports = router;

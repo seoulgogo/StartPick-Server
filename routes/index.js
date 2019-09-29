@@ -13,6 +13,10 @@ router.use(function(req, res, next) {
 router.use('/supportList',require('./supportList/index'));
 router.use('/auth',require('./auth/index'));
 router.use('/place',require('./place/index'));
+router.use('/withUs',require('./withUs/index'));
+router.use('/myPage',require('./myPage/index'));
+router.use('/main',require('./main/index'));
+
 router.get('/', function(req, res, next) {
   console.log("hihihi");
   res.render('index', { title: 'Express' });

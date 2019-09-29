@@ -19,7 +19,8 @@ router.get('/',async(req,res)=>{
         await connection.commit();
         
         selectAllMapResult = await connection.query(selectAllMapQuery)||null;
-        if(!selectAllMapResult){
+        pool.releaseConnection(connection);
+	    if(!selectAllMapResult){
             res.status(200).send(util.successFalse(statusCode.BAD_REQUEST,resMessage.DATA_FAIL));
         }else{
             res.status(200).send(util.successTrue(statusCode.OK, resMessage.DATA_SUCESS,selectAllMapResult))
