@@ -92,14 +92,14 @@ router.post('/modiyfyWithUs',upload.single('img'), async(req,res)=>{
 router.post('/withUsDelete' ,async(req,res)=>{
     let idx = req.body.withUs_idx;
     console.log(idx);
-    if(idx<=0){
+    if(idx == undefined){
         res.status(200).send(util.successFalse(statusCode.BAD_REQUEST,resMessage.EMPTY_LIST));
     }else{
         let deleteQuery = 'DELETE FROM withUs WHERE withUs_idx = ?;' + 'DELETE FROM withUsDetail WHERE withUs_idx = ?;';
         let deleteResult;
         try{
             var connection = await pool.getConnection();
-            deleteResult = await connection.query(deleteQuery,[idx]);
+            deleteResult = await connection.query(deleteQuery,[idx, idx]);
         }catch(err){
             console.log(err);
             connection.rollback(()=>{});

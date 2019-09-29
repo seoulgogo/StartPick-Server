@@ -34,7 +34,7 @@ router.get('/getStartUpIdx/:startUp_idx',async(req,res)=>{
 
     try{
         var connection = await pool.getConnection();
-        let getStartUpQuery = 'SELECT s.fieldName FROM withUs w,startUp s WHERE w.startUp_idx = s.startUp_idx AND w.startUp_idx = ?';
+        let getStartUpQuery = 'SELECT DISTINCT s.fieldName FROM withUs w,startUp s WHERE w.startUp_idx = s.startUp_idx AND w.startUp_idx = ?';
         getStartUpResult = await connection.query(getStartUpQuery,[startUp_idx]);
         console.log(getStartUpResult);
     }catch(err){
@@ -56,25 +56,32 @@ router.get('/getStartUpIdx/:startUp_idx',async(req,res)=>{
 // withUs/all/filterWithUsAll
 router.get('/filterWithUs/:startUp_idx/:job_idx',async(req,res)=>{
     let getfilterWithUsAll;
+    let filterWithUsAllQuery;
     let {startUp_idx} = req.params;
     let {job_idx} = req.params;
     console.log(startUp_idx);
     console.log(job_idx);
-    try{
-        var connection = await pool.getConnection();
-        let filterWithUsAllQuery = 'SELECT * FROM withUs WHERE startUp_idx = ? AND job_idx = ?';
-        getfilterWithUsAll = await connection.query(filterWithUsAllQuery,[startUp_idx,job_idx]);
-        console.log(getfilterWithUsAll);
-
-    }catch(err){
-        console.log(err);
-        connection.rollback(()=>{});
-        res.status(200).send(util.successFalse(statusCode.DB_ERROR,resMessage.ALL_LSIT_FAIL));
-        next(err);
-    }finally{
-        pool.releaseConnection(connection);
-        res.status(200).send(util.successTrue(statusCode.OK,resMessage.ALL_LIST_SUCCESS,getfilterWithUsAll));
-
+      try{
+          var connection = await pool.getConnection();
+          if(startUp_idx == 0){
+            filterWithUsAllQuery = 'SELECT * FROM withUs WHERE job_idx = ?';
+            getfilterWithUsAll = await connection.query(filterWithUsAllQuery,[job_idx]);
+          }else if(job_idx == 0){
+            filterWithUsAllQuery = 'SELECT * FROM withUs WHERE startUp_idx = ?';
+            getfilterWithUsAll = await connection.query(filterWithUsAllQuery,[startUp_idx]);
+          }else{
+            filterWithUsAllQuery = 'SELECT * FROM withUs WHERE startUp_idx = ? AND job_idx = ?';
+            getfilterWithUsAll = await connection.query(filterWithUsAllQuery,[startUp_idx,job_idx]);
+          }
+          console.log(getfilterWithUsAll);
+      }catch(err){
+          console.log(err);
+          connection.rollback(()=>{});
+          res.status(200).send(util.successFalse(statusCode.DB_ERROR,resMessage.ALL_LSIT_FAIL));
+          next(err);
+      }finally{
+          pool.releaseConnection(connection);
+          res.status(200).send(util.successTrue(statusCode.OK,resMessage.ALL_LIST_SUCCESS,getfilterWithUsAll));
     }
 });
 

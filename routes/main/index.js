@@ -6,9 +6,9 @@ const resMessage = require('../../module/responseMessage');
 const util = require('../../module/utils');
 const upload = require('../../config/multer');
 
-// main/newOrder
+// main/bannerOrder
 // 최신 공고, 배너
-router.get('/newOrder',async(req,res)=>{
+router.get('/bannerOrder',async(req,res)=>{
     let getStartOrder;
     try{
         var connection = await pool.getConnection();
@@ -33,7 +33,7 @@ router.get('/CustomizeOrder/:job_idx', async(req,res)=>{
     let {job_idx} = req.params;
     try{
         var connection = await pool.getConnection();
-        let getCustomizeOrderQuery = 'SELECT * FROM withUs WHERE job_idx = ? ORDER BY likeNum DESC limit 5';
+        let getCustomizeOrderQuery = 'SELECT * FROM withUs WHERE job_idx = ? ORDER BY likeNum DESC limit 3';
         getCustomizeOrder = await connection.query(getCustomizeOrderQuery,[job_idx]);
         console.log(getCustomizeOrder);
     }catch(err){

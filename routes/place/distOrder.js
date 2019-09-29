@@ -10,6 +10,8 @@ const util = require('../../module/utils');
 router.post('/',async(req,res)=>{
     let {la} = req.body;
     let {lo} = req.body;
+	console.log(la);
+	console.log(lo);
 
     try{
         let selectAllMapQuery = "SELECT * from mydb.map";
@@ -26,8 +28,9 @@ router.post('/',async(req,res)=>{
                 let distY = Math.abs(selectAllMapResult[idx].longitude);
                 selectAllMapResult[idx].dist = Math.sqrt(distX*distX+distY*distY);
             }
+		pool.releaseConnection(connection);
             selectAllMapResult.sort(function(a,b){
-                return a.dist < b.dist ? -1 : a.dist > b.dist ? 1:0;
+                return a.dist > b.dist ? -1 : a.dist < b.dist ? 1:0;
             });
             res.status(200).send(util.successTrue(statusCode.OK, resMessage.MAP_DIST_SUCESS,selectAllMapResult))
         }
